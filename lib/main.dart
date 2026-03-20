@@ -10,73 +10,52 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final outbound = Outbound(products: ["Doce de Leite 500g", 'Coalhada 400ml']);
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.purpleAccent,
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text('Fazenda Boa Esperança'),
           ),
         ),
-        body: Center(
-          child: ProductsList(),
-        ),
-      ),
-    );
-  }
-}
-
-class ProductsList extends StatelessWidget {
-  const ProductsList({super.key});
-
-  final List<Product> products = const [
-    Product(
-      name: 'Leite Pasteurizado',
-      price: 4.99,
-      quantity: 1.0,
-      unitType: UnitType.liters,
-    ),
-    Product(
-      name: 'Queijo Minas',
-      price: 29.90,
-      quantity: 1.0,
-      unitType: UnitType.kg,
-    ),
-    Product(
-      name: 'Iogurte Natural',
-      price: 3.49,
-      quantity: 1.0,
-      unitType: UnitType.amount,
-    ),
-    Product(
-      name: 'Manteiga',
-      price: 12.90,
-      quantity: 500,
-      unitType: UnitType.amount,
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        color: Colors.blue,
-        child: Column( 
-            children: [
-            for(var product in products)
-              Row(
-                children: [
-                  Text(product.name),
-                  Text('${product.unitType}'),
-                  Text('${product.quantity}'),
-                  Text('${product.price}'),
-                ],
+        body: Column(
+          children: [
+            Container(
+              height: 50.0,
+              child: Text("FATURAMENTO DO DIA"),
+            ),
+            Text("PRODUTOS DE HOJE:"),
+            Expanded(
+              child: Container(
+                color: Colors.blueGrey,
+                child: ListView(
+                  children: outbound.getProducts.map(
+                    (product) => ListTile(
+                    title: Text(product)
+                    )
+                  ).toList(),
+                ),
               ),
+            ),
           ],
         ),
+        bottomNavigationBar: Container(
+          height: 100.0,
+          child: Row(
+            children: [
+              Container(
+                child: IconButton(onPressed: null, icon: Icon(Icons.abc_rounded, size: 70.0)),
+              ),
+              Container(
+                child: IconButton(onPressed: null, icon: Icon(Icons.ac_unit_rounded, size: 70.0,)),
+              ),
+            ],
+          ),
+        )
       ),
     );
   }

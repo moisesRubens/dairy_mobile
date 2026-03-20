@@ -1,4 +1,8 @@
 
+import 'dart:collection';
+
+import 'package:flutter/material.dart';
+
 enum UnitType {
   amount, 
   liters,
@@ -16,4 +20,12 @@ class Product {
     required this.quantity, 
     required this.unitType});
 
+}
+
+class Outbound {
+  late List<String> products;
+
+  Outbound({required this.products});
+
+  UnmodifiableListView<String> get getProducts => UnmodifiableListView(products);
 }
