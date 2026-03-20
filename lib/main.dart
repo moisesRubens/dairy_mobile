@@ -12,7 +12,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text('Fazenda Boa Esperança'),
@@ -60,18 +62,21 @@ class ProductsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          for(var product in products)
-            Row(
-              children: [
-                Text(product.name),
-                Text('${product.unitType}'),
-                Text('${product.quantity}'),
-                Text('${product.price}'),
-              ],
-            ),
-        ],
+      child: Container(
+        color: Colors.blue,
+        child: Column( 
+            children: [
+            for(var product in products)
+              Row(
+                children: [
+                  Text(product.name),
+                  Text('${product.unitType}'),
+                  Text('${product.quantity}'),
+                  Text('${product.price}'),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
