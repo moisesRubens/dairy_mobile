@@ -2,21 +2,25 @@ import 'package:dairy_mobile/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const Dairy());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class Dairy extends StatelessWidget {
+  const Dairy({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final outbound = Outbound(products: ["Doce de Leite 500g", 'Coalhada 400ml']);
 
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.purpleAccent,
+          shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+               width: 2,
+            ),
+          ),
+          backgroundColor: Colors.white,
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text('Fazenda Boa Esperança'),
@@ -24,22 +28,9 @@ class MainApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Container(
-              height: 50.0,
-              child: Text("FATURAMENTO DO DIA"),
-            ),
-            Text("PRODUTOS DE HOJE:"),
+            DairyStatus(),
             Expanded(
-              child: Container(
-                color: Colors.blueGrey,
-                child: ListView(
-                  children: outbound.getProducts.map(
-                    (product) => ListTile(
-                    title: Text(product)
-                    )
-                  ).toList(),
-                ),
-              ),
+              child: ProductList(),
             ),
           ],
         ),
@@ -58,5 +49,35 @@ class MainApp extends StatelessWidget {
         )
       ),
     );
+  }
+}
+
+class DairyStatus extends StatefulWidget {
+  final String name = 'Faturamento do Dia: ';
+
+  @override
+  State<DairyStatus> createState() => _StateDairyStatus();
+}
+
+class _StateDairyStatus extends State<DairyStatus> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.name),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Soma: "),
+              Text("Total de Pedidos: ")
+            ],
+          ),
+        ],
+      ),
+    ); 
   }
 }
