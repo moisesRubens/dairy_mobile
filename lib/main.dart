@@ -13,14 +13,15 @@ class Dairy extends StatelessWidget {
 
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           shape: Border(
             bottom: BorderSide(
               color: Colors.grey,
                width: 2,
             ),
           ),
-          backgroundColor: Colors.white,
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text('Fazenda Boa Esperança'),
@@ -34,18 +35,9 @@ class Dairy extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-          height: 100.0,
-          child: Row(
-            children: [
-              Container(
-                child: IconButton(onPressed: null, icon: Icon(Icons.abc_rounded, size: 70.0)),
-              ),
-              Container(
-                child: IconButton(onPressed: null, icon: Icon(Icons.ac_unit_rounded, size: 70.0,)),
-              ),
-            ],
-          ),
+        bottomNavigationBar: Container(        
+          height: 70.0,
+          child: DairyBottomNavigationBar()
         )
       ),
     );
@@ -79,5 +71,20 @@ class _StateDairyStatus extends State<DairyStatus> {
         ],
       ),
     ); 
+  }
+}
+
+class DairyBottomNavigationBar extends StatelessWidget {
+  final int numberBottons = 4;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        for(var i=0; i<numberBottons; i++)
+          IconButton(onPressed: null, icon: Icon(Icons.ac_unit_rounded, size: 50.0,))
+        ],
+    );
   }
 }

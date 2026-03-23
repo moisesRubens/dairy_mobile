@@ -29,15 +29,29 @@ class _ProductsListState extends State<ProductList> {
     });
   }
 
+  void removeAllOutbounds() {
+    setState(() {
+      products.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(
-          onPressed: () {
-            addProduct("Produto ${products.length + 1}");
-          },
-          child: Text("Adicionar Produto"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                removeAllOutbounds();
+              },
+              child: Text("Retornar ao estoque"),
+            ),
+            ElevatedButton(
+              onPressed: () {addProduct("Produto ${products.length+1}");},
+              child: Text("Adicionar Produto")),
+          ],
         ),
         Expanded(
           child: products.isEmpty
@@ -50,7 +64,7 @@ class _ProductsListState extends State<ProductList> {
                     return ListTile(
                       title: Text(products[index].name),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: Icon(Icons.add),
                         onPressed: () => removeProduct(index),
                       ),
                     );
