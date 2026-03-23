@@ -1,11 +1,8 @@
-
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 
 class Product {
   final String name;
-
+  
   Product({required this.name});
 }
 
@@ -15,7 +12,10 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductsListState extends State<ProductList> {
-  List<Product> products = [];
+  // Inicializar com produtos diretamente
+  List<Product> products = [
+    Product(name: "Doce de Leite"),
+  ];
 
   void addProduct(String name) {
     setState(() {
@@ -39,23 +39,25 @@ class _ProductsListState extends State<ProductList> {
           },
           child: Text("Adicionar Produto"),
         ),
-
         Expanded(
-          child: ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(products[index].name),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => removeProduct(index),
+          child: products.isEmpty
+              ? Center(
+                  child: Text("Nenhum produto disponível para a venda"),
+                )
+              : ListView.builder(
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(products[index].name),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => removeProduct(index),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ],
     );
   }
 }
-
