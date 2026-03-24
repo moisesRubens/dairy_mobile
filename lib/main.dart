@@ -10,43 +10,120 @@ class Dairy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const MaterialApp(home: Home());
+  }
+}
 
-    return MaterialApp(
-      home: Scaffold(
+
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+
+class _HomeState extends State<Home> {
+  int currentPageIndex = 0;
+  String selectedPage = '';
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        actions: [
+          
+        ],
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-               width: 2,
-            ),
-          ),
-          title: Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Fazenda Boa Esperança'),
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey,
+            width: 2,
           ),
         ),
-        body: Column(
-          children: [
-            DairyStatus(),
-            Expanded(
-              child: ProductList(),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text('Fazenda Boa Esperança'),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text(
+                'Decoracao qualquer',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Perfil'),
+              onTap: () {
+                setState(() {
+                  selectedPage = 'Profile';
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Sair'),
+              onTap: () {
+                setState(() {
+                  selectedPage = 'Login';
+                });
+              },
             ),
           ],
         ),
-        bottomNavigationBar: Container(        
-          height: 70.0,
-          child: DairyBottomNavigationBar()
-        )
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(8),
+            child: DairyStatus(),
+          ),
+          Expanded(
+            child: ProductList(),
+          ),
+        ],
+      ),
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: Colors.amber,
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.notifications_sharp)),
+            label: 'Pedidos',
+          ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.messenger_sharp)),
+            label: 'Produtos',
+          ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.abc_sharp)),
+            label: 'Pontos de Venda',
+          )
+        ],
       ),
     );
   }
 }
 
-class DairyStatus extends StatefulWidget {
-  final String name = 'Faturamento do Dia: ';
 
+class DairyStatus extends StatefulWidget {
   @override
   State<DairyStatus> createState() => _StateDairyStatus();
 }
@@ -55,40 +132,25 @@ class _StateDairyStatus extends State<DairyStatus> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.name),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Card(
+      child: Padding(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Card(
-                child: Text("Soma: "),
+              Text("Faturamento do dia"),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Soma: "),
+                  Text("Total de Pedidos: ")
+                ],
               ),
-              Card(
-                child: Text("Total de Pedidos: "),
-              )
             ],
           ),
-        ],
-      ),
-    ); 
-  }
-}
-
-class DairyBottomNavigationBar extends StatelessWidget {
-  final int numberBottons = 4;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        for(var i=0; i<numberBottons; i++)
-          IconButton(onPressed: null, icon: Icon(Icons.ac_unit_rounded, size: 50.0,))
-        ],
+        )
     );
+    
   }
 }

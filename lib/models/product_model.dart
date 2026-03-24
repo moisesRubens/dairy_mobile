@@ -23,12 +23,6 @@ class _ProductsListState extends State<ProductList> {
     });
   }
 
-  void removeProduct(int index) {
-    setState(() {
-      products.removeAt(index);
-    });
-  }
-
   void removeAllOutbounds() {
     setState(() {
       products.clear();
@@ -61,21 +55,28 @@ class _ProductsListState extends State<ProductList> {
               : ListView.builder(
                   itemCount: products.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.all(8.0),
+                    /*return ListTile(
+                      title: Text(products[index].name),
+                      trailing: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () => null,
+                      ),
+                    );*/
+                    return Padding(
+                      padding: EdgeInsets.all(16),
                       child: Row(
                         children: [
                           Expanded(
-                              flex: 2,
-                              child: Text(
+                            flex: 2,
+                            child: Text(
                                 products[index].name,
-                                style: TextStyle(fontSize: 16),
+                                style: const TextStyle(fontSize: 16),
                               ),
                           ),
                           SizedBox(
-                              width: 80,
+                              width: 65,
                               child: TextField(
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Qtd',
                                   isDense: true,
@@ -84,11 +85,11 @@ class _ProductsListState extends State<ProductList> {
                                 controller: TextEditingController(
                                   text: null,
                                 ),
-                                onChanged: null
+                                onChanged: null,
                               ),
-                          ),
+                            ),
                         ],
-                        )
+                      ),
                     );
                   },
                 ),
@@ -97,7 +98,3 @@ class _ProductsListState extends State<ProductList> {
     );
   }
 }
-
-
-
-
