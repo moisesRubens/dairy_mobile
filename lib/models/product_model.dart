@@ -37,14 +37,20 @@ class _ProductsListState extends State<ProductList> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red
+              ),
               onPressed: () {
                 removeAllOutbounds();
               },
-              child: Text("Retornar ao estoque"),
+              child: Text("Retornar ao estoque", style: TextStyle(color: Colors.white)),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red
+              ),
               onPressed: () {addProduct("Produto ${products.length+1}");},
-              child: Text("Adicionar Produto")),
+              child: Text("Adicionar Produto", style: TextStyle(color: Colors.white))),
           ],
         ),
         Expanded(

@@ -2,18 +2,115 @@ import 'package:dairy_mobile/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const Dairy());
+  runApp(Dairy());
 }
 
-class Dairy extends StatelessWidget {
-  const Dairy({super.key});
+class Dairy extends StatefulWidget {
+  Dairy({super.key});
+  
+
+  @override
+  State<Dairy> createState() => _DairyState();
+  
+}
+
+class _DairyState extends State<Dairy> {
+  int currentPageIndex = 0;  
+
+  Widget _setPage() {
+    switch(currentPageIndex) {
+      case 0:
+        return const Home();
+      case 1:
+        return Text("Pedidos");
+      case 2:
+        return Text("Produtos");
+      case 3:
+        return Text("Pontos de Venda");
+      default:
+        return Text("Funcionou");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: Home());
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        appBar: AppBar(
+          actions: [
+            
+          ],
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+              width: 2,
+            ),
+          ),
+          title: Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Fazenda Boa Esperança'),
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                decoration: BoxDecoration(color: Colors.blue),
+                child: Text(
+                  'Decoracao qualquer',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.account_circle),
+                title: const Text('Perfil'),
+                onTap: null
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Sair'),
+                onTap: null
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: NavigationBar(
+          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          onDestinationSelected: (int index) {  
+            setState(() {                        
+              currentPageIndex = index;
+            });
+          },
+          indicatorColor: Colors.grey,
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Badge(child: Icon(Icons.notifications_sharp)),
+              label: 'Pedidos',
+            ),
+            NavigationDestination(
+              icon: Badge(child: Icon(Icons.messenger_sharp)),
+              label: 'Produtos',
+            ),
+            NavigationDestination(
+              icon: Badge(child: Icon(Icons.abc_sharp)),
+              label: 'Pontos de Venda',
+            )
+          ],
+        ),
+        body: _setPage()
+      )
+    );
   }
 }
-
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -22,102 +119,20 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-
 class _HomeState extends State<Home> {
-  int currentPageIndex = 0;
-  String selectedPage = '';
-  
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        actions: [
-          
-        ],
-        backgroundColor: Colors.white,
-        shape: Border(
-          bottom: BorderSide(
-            color: Colors.grey,
-            width: 2,
-          ),
-        ),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text('Fazenda Boa Esperança'),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Decoracao qualquer',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
+    return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: DairyStatus(),
             ),
-            ListTile(
-              leading: const Icon(Icons.account_circle),
-              title: const Text('Perfil'),
-              onTap: () {
-                setState(() {
-                  selectedPage = 'Profile';
-                });
-              },
+            Expanded(
+              child: ProductList(),
             ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Sair'),
-              onTap: () {
-                setState(() {
-                  selectedPage = 'Login';
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: DairyStatus(),
-          ),
-          Expanded(
-            child: ProductList(),
-          ),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.notifications_sharp)),
-            label: 'Pedidos',
-          ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.messenger_sharp)),
-            label: 'Produtos',
-          ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.abc_sharp)),
-            label: 'Pontos de Venda',
-          )
-        ],
-      ),
+     ],
     );
   }
 }
@@ -133,6 +148,7 @@ class _StateDairyStatus extends State<DairyStatus> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       child: Padding(
           padding: EdgeInsets.all(15),
           child: Column(
