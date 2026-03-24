@@ -61,12 +61,34 @@ class _ProductsListState extends State<ProductList> {
               : ListView.builder(
                   itemCount: products.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(products[index].name),
-                      trailing: IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () => removeProduct(index),
-                      ),
+                    return Container(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                products[index].name,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                          ),
+                          SizedBox(
+                              width: 80,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Qtd',
+                                  isDense: true,
+                                ),
+                                keyboardType: TextInputType.number,
+                                controller: TextEditingController(
+                                  text: null,
+                                ),
+                                onChanged: null
+                              ),
+                          ),
+                        ],
+                        )
                     );
                   },
                 ),
@@ -75,3 +97,7 @@ class _ProductsListState extends State<ProductList> {
     );
   }
 }
+
+
+
+

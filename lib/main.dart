@@ -64,8 +64,12 @@ class _StateDairyStatus extends State<DairyStatus> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Soma: "),
-              Text("Total de Pedidos: ")
+              Card(
+                child: Text("Soma: "),
+              ),
+              Card(
+                child: Text("Total de Pedidos: "),
+              )
             ],
           ),
         ],
@@ -80,7 +84,7 @@ class DairyBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         for(var i=0; i<numberBottons; i++)
           IconButton(onPressed: null, icon: Icon(Icons.ac_unit_rounded, size: 50.0,))
