@@ -1,5 +1,10 @@
-import 'package:dairy_mobile/models/product_model.dart';
+import 'package:dairy_mobile/controllers/product_controller.dart';
+import 'package:dairy_mobile/views/outbound_page.dart';
+import 'package:dairy_mobile/views/product_page.dart';
+import 'package:dairy_mobile/services/api_service.dart';
+import 'package:dairy_mobile/services/product_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(Dairy());
@@ -7,11 +12,9 @@ void main() {
 
 class Dairy extends StatefulWidget {
   Dairy({super.key});
-  
 
   @override
   State<Dairy> createState() => _DairyState();
-  
 }
 
 class _DairyState extends State<Dairy> {
@@ -24,7 +27,7 @@ class _DairyState extends State<Dairy> {
       case 1:
         return Text("Pedidos");
       case 2:
-        return Text("Produtos");
+        return const ProductsPageWrapper();
       case 3:
         return Text("Pontos de Venda");
       default:
@@ -36,12 +39,10 @@ class _DairyState extends State<Dairy> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          actions: [
-            
-          ],
-          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          actions: [],
+          backgroundColor: Colors.white,
           shape: Border(
             bottom: BorderSide(
               color: Colors.grey,
@@ -168,5 +169,19 @@ class _StateDairyStatus extends State<DairyStatus> {
         )
     );
     
+  }
+}
+
+class ProductsPageWrapper extends StatelessWidget {
+  const ProductsPageWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => ProductController(
+        productService: ProductService(ApiService()),
+      )..loadProducts(),
+      child: const ProductPage(), // Seu ProductPage com Consumer
+    );
   }
 }
