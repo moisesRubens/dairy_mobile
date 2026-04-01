@@ -1,19 +1,16 @@
 // product_page.dart - Mantenha apenas se precisar da tela completa
-import 'package:dairy_mobile/controllers/product_controller.dart';
-import 'package:dairy_mobile/main.dart';
+import 'package:dairy_mobile/controllers/outbound_controller.dart';
 import 'package:dairy_mobile/models/product_model.dart';
-import 'package:dairy_mobile/services/api_service.dart';
-import 'package:dairy_mobile/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// Esta tela é usada na página de produtos do bottom navigation
-class ProductList extends StatefulWidget {
+
+class Outbound extends StatefulWidget {
   @override
-  State<ProductList> createState() => _ProductsListState();
+  State<Outbound> createState() => _OutboundState();
 }
 
-class _ProductsListState extends State<ProductList> {
+class _OutboundState extends State<Outbound> {
   // Inicializar com produtos diretamente
   List<Product> products = [];
 
@@ -101,6 +98,39 @@ class _ProductsListState extends State<ProductList> {
                 ),
         ),
       ],
+    );
+  }
+}
+
+class OutboundTest extends StatelessWidget {
+  int id = 1;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<OutboundController>(
+      builder: (context, controller, child) {
+        if(controller.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if(controller.error != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Erro: ${controller.error}'),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => controller.loadOutbounds(id),
+                  child: const Text('Tentar novamente'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return Stack();
+      },
     );
   }
 }

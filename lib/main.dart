@@ -79,7 +79,7 @@ class _DairyState extends State<Dairy> {
           ),
         ),
         bottomNavigationBar: NavigationBar(
-          backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+          backgroundColor: Colors.white,
           onDestinationSelected: (int index) {  
             setState(() {                        
               currentPageIndex = index;
@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
               child: DairyStatus(),
             ),
             Expanded(
-              child: ProductList(),
+              child: Outbound(),
             ),
      ],
     );
