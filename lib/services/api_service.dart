@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 class ApiService {
   static String get baseUrl {
-    if (kIsWeb) return 'http://192.168.1.100:8000'; // coloque seu IP real
+    if (kIsWeb) return 'http://127.0.0.1:8000';
     if (defaultTargetPlatform == TargetPlatform.android) return 'http://10.0.2.2:8000';
     return 'http://localhost:8000';
   }
@@ -24,7 +24,7 @@ class ApiService {
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      if (_token != null) 'Authorization': 'Bearer $_token!',
+      if (_token != null) 'Authorization': 'Bearer $_token',
     };
   }
 

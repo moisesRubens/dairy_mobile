@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dairy_mobile/controllers/sale_point_controller.dart';
 import 'package:dairy_mobile/models/sale_point_model.dart';
+import 'package:dairy_mobile/views/outbound_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -57,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                           );
                           if (success) {
                             // Se login bem-sucedido, retorna para Home
-                            Navigator.pop(context);
+                            null;
                           }
                         },
                   child: const Text('Entrar'),
@@ -140,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           );
                           bool success = await controller.register(user);
                           if (success) {
-                            Navigator.pop(context); // volta para login
+                            null; // volta para login
                           }
                         },
                   child: const Text('Cadastrar'),
@@ -153,3 +154,4 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 }
+

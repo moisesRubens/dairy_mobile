@@ -39,9 +39,7 @@ class DairyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
       },
       // Se não estiver logado, abre login; caso contrário, abre home
-      home: salePointController.currentUser == null
-          ? const LoginPage()
-          : const Dairy(),
+      home: const AuthWrapper(),
     );
   }
 }
@@ -220,6 +218,23 @@ class ProductsPageWrapper extends StatelessWidget {
         productService: ProductService(ApiService()),
       )..loadProducts(),
       child: const ProductPage(),
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<SalePointController>(
+      builder: (context, controller, _) {
+        if (controller.currentUser == null) {
+          return const LoginPage();
+        } else {
+          return const Dairy();
+        }
+      },
     );
   }
 }
