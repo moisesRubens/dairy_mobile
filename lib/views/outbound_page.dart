@@ -101,36 +101,3 @@ class _OutboundState extends State<Outbound> {
     );
   }
 }
-
-class OutboundTest extends StatelessWidget {
-  int id = 1;
-  
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<OutboundController>(
-      builder: (context, controller, child) {
-        if(controller.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if(controller.error != null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Erro: ${controller.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => controller.loadOutbounds(id),
-                  child: const Text('Tentar novamente'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return Stack();
-      },
-    );
-  }
-}

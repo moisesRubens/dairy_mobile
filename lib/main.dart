@@ -1,114 +1,154 @@
 import 'package:dairy_mobile/controllers/product_controller.dart';
+import 'package:dairy_mobile/controllers/sale_point_controller.dart';
 import 'package:dairy_mobile/views/outbound_page.dart';
 import 'package:dairy_mobile/views/product_page.dart';
+import 'package:dairy_mobile/views/auth_page.dart';
 import 'package:dairy_mobile/services/api_service.dart';
 import 'package:dairy_mobile/services/product_service.dart';
+import 'package:dairy_mobile/services/sale_point_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(Dairy());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SalePointController(
+            SalePointService(ApiService()),
+          ),
+        ),
+        // você pode adicionar outros controllers aqui, como ProductController
+      ],
+      child: const DairyApp(),
+    ),
+  );
+}
+
+class DairyApp extends StatelessWidget {
+  const DairyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final salePointController = Provider.of<SalePointController>(context);
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+      },
+      // Se não estiver logado, abre login; caso contrário, abre home
+      home: salePointController.currentUser == null
+          ? const LoginPage()
+          : const Dairy(),
+    );
+  }
 }
 
 class Dairy extends StatefulWidget {
-  Dairy({super.key});
+  const Dairy({super.key});
 
   @override
   State<Dairy> createState() => _DairyState();
 }
 
 class _DairyState extends State<Dairy> {
-  int currentPageIndex = 0;  
+  int currentPageIndex = 0;
 
   Widget _setPage() {
-    switch(currentPageIndex) {
+    switch (currentPageIndex) {
       case 0:
         return const Home();
       case 1:
-        return Text("Pedidos");
+        return const Center(child: Text("Pedidos"));
       case 2:
         return const ProductsPageWrapper();
       case 3:
-        return Text("Pontos de Venda");
+        return const Center(child: Text("Pontos de Venda"));
       default:
-        return Text("Funcionou");
+        return const Center(child: Text("Funcionou"));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    final salePointController =
+        Provider.of<SalePointController>(context, listen: false);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        actions: [],
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          actions: [],
-          backgroundColor: Colors.white,
-          shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-              width: 2,
-            ),
-          ),
-          title: Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Fazenda Boa Esperança'),
+        shape: const Border(
+          bottom: BorderSide(
+            color: Colors.grey,
+            width: 2,
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              const DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blue),
-                child: Text(
-                  'Decoracao qualquer',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: const Text('Perfil'),
-                onTap: null
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Sair'),
-                onTap: null
-              ),
-            ],
-          ),
+        title: const Align(
+          alignment: Alignment.centerLeft,
+          child: Text('Fazenda Boa Esperança'),
         ),
-        bottomNavigationBar: NavigationBar(
-          backgroundColor: Colors.white,
-          onDestinationSelected: (int index) {  
-            setState(() {                        
-              currentPageIndex = index;
-            });
-          },
-          indicatorColor: Colors.grey,
-          selectedIndex: currentPageIndex,
-          destinations: const <Widget>[
-            NavigationDestination(
-              selectedIcon: Icon(Icons.home),
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text(
+                'Decoracao qualquer',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
             ),
-            NavigationDestination(
-              icon: Badge(child: Icon(Icons.notifications_sharp)),
-              label: 'Pedidos',
+            ListTile(
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Perfil'),
+              onTap: () {},
             ),
-            NavigationDestination(
-              icon: Badge(child: Icon(Icons.messenger_sharp)),
-              label: 'Produtos',
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Sair'),
+              onTap: () async {
+                await salePointController.logout();
+                Navigator.pushReplacementNamed(context, '/login');
+              },
             ),
-            NavigationDestination(
-              icon: Badge(child: Icon(Icons.abc_sharp)),
-              label: 'Pontos de Venda',
-            )
           ],
         ),
-        body: _setPage()
-      )
+      ),
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: Colors.grey,
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.notifications_sharp)),
+            label: 'Pedidos',
+          ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.messenger_sharp)),
+            label: 'Produtos',
+          ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.abc_sharp)),
+            label: 'Pontos de Venda',
+          )
+        ],
+      ),
+      body: _setPage(),
     );
   }
 }
@@ -121,54 +161,52 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: DairyStatus(),
-            ),
-            Expanded(
-              child: Outbound(),
-            ),
-     ],
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(8),
+          child: DairyStatus(),
+        ),
+        Expanded(
+          child: Outbound(),
+        ),
+      ],
     );
   }
 }
 
-
 class DairyStatus extends StatefulWidget {
+  const DairyStatus({super.key});
+
   @override
   State<DairyStatus> createState() => _StateDairyStatus();
 }
 
 class _StateDairyStatus extends State<DairyStatus> {
-
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
       child: Padding(
-          padding: EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Faturamento do dia"),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Soma: "),
-                  Text("Total de Pedidos: ")
-                ],
-              ),
-            ],
-          ),
-        )
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Faturamento do dia"),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text("Soma: "),
+                Text("Total de Pedidos: ")
+              ],
+            ),
+          ],
+        ),
+      ),
     );
-    
   }
 }
 
@@ -181,7 +219,7 @@ class ProductsPageWrapper extends StatelessWidget {
       create: (context) => ProductController(
         productService: ProductService(ApiService()),
       )..loadProducts(),
-      child: const ProductPage(), // Seu ProductPage com Consumer
+      child: const ProductPage(),
     );
   }
 }
