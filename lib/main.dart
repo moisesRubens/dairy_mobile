@@ -1,24 +1,50 @@
 import 'package:dairy_mobile/controllers/product_controller.dart';
 import 'package:dairy_mobile/controllers/sale_point_controller.dart';
+import 'package:dairy_mobile/controllers/outbound_controller.dart';
 import 'package:dairy_mobile/views/outbound_page.dart';
 import 'package:dairy_mobile/views/product_page.dart';
 import 'package:dairy_mobile/views/auth_page.dart';
 import 'package:dairy_mobile/services/api_service.dart';
 import 'package:dairy_mobile/services/product_service.dart';
 import 'package:dairy_mobile/services/sale_point_service.dart';
+import 'package:dairy_mobile/services/outbound_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+// No main.dart, adicione o OutboundController nos providers
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  final prefs = await SharedPreferences.getInstance();
+  final savedToken = prefs.getString('token') ?? '';
+  
+  final apiService = ApiService();
+  if (savedToken.isNotEmpty) {
+    apiService.setToken(savedToken);
+  }
+  
   runApp(
     MultiProvider(
       providers: [
+        Provider<ApiService>.value(value: apiService),
         ChangeNotifierProvider(
           create: (_) => SalePointController(
-            SalePointService(ApiService()),
+            SalePointService(apiService),
           ),
         ),
-        // você pode adicionar outros controllers aqui, como ProductController
+        // Adiciona o OutboundController
+        ChangeNotifierProxyProvider<SalePointController, OutboundController>(
+          create: (context) => OutboundController(
+            outboundService: OutboundService(apiService),
+            salePointController: context.read<SalePointController>(),
+          ),
+          update: (context, salePointController, previous) => previous ?? OutboundController(
+            outboundService: OutboundService(apiService),
+            salePointController: salePointController,
+          ),
+        ),
       ],
       child: const DairyApp(),
     ),
@@ -168,7 +194,7 @@ class _HomeState extends State<Home> {
           child: DairyStatus(),
         ),
         Expanded(
-          child: Outbound(),
+          child: OutboundPage(),
         ),
       ],
     );
@@ -213,9 +239,10 @@ class ProductsPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final apiService = Provider.of<ApiService>(context);  // ✅ Pega o mesmo ApiService
     return ChangeNotifierProvider(
       create: (context) => ProductController(
-        productService: ProductService(ApiService()),
+        productService: ProductService(apiService),  // ✅ Usa o mesmo com token
       )..loadProducts(),
       child: const ProductPage(),
     );
@@ -238,3 +265,4 @@ class AuthWrapper extends StatelessWidget {
     );
   }
 }
+

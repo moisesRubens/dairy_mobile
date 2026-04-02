@@ -6,14 +6,20 @@ class OutboundService {
 
   OutboundService(this._apiService);
 
-  Future<List<Outbound>> getOutbounds(int id) async {
-    final response = await _apiService.get('auth/$id/outbounds');
+  Future<List<Outbound>> getOutbounds(int id, {DateTime? date}) async {
+    String endpoint = 'auth/$id/outbounds';
+    
+    // Se tiver data, adiciona como query parameter
+    if (date != null) {
+      final formattedDate = date.toIso8601String().split('T').first;
+      endpoint = 'auth/$id/outbounds?date=$formattedDate';
+    }
+    
+    final response = await _apiService.get(endpoint);
 
-    if(response is List) {
+    if (response is List) {
       return response.map((json) => Outbound.fromJson(json)).toList();
     }
     return [];
   }
-
-
 }
