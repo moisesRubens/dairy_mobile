@@ -1,5 +1,6 @@
 class Outbound {
   int id;
+  int product_id;
   String? name;
   bool? status;
   DateTime? date;
@@ -11,11 +12,12 @@ class Outbound {
   String? observation;
 
 
-  Outbound({required this.id, this.name, this.status, this.date, this.unit_type, this.taken_quantity, this.sold_quantity, this.remaining_quantity, this.total_value_item, this.observation});
+  Outbound({required this.id, required this.product_id, this.name, this.status, this.date, this.unit_type, this.taken_quantity, this.sold_quantity, this.remaining_quantity, this.total_value_item, this.observation});
 
   factory Outbound.fromJson(Map<String, dynamic> json) {
     return Outbound(
       id: json['id'],
+      product_id: json['product_id'],
       name: json['name'],
       status: json['status'],
       date: json['data'] != null ? DateTime.parse(json['data']) : null,

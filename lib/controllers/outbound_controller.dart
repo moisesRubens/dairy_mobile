@@ -6,15 +6,18 @@ import 'package:dairy_mobile/controllers/sale_point_controller.dart';
 class OutboundController extends ChangeNotifier {
   final OutboundService outboundService;
   final SalePointController salePointController;
-  
+
   List<Outbound> _outbounds = [];
   bool _isLoading = false;
   String? _error;
   DateTime _selectedDate = DateTime.now();
 
+  int _totalOrders = 0;
+  double _dailyRevenue = 0;
+
   OutboundController({
     required this.outboundService,
-    required this.salePointController,  // ✅ Nome correto do parâmetro
+    required this.salePointController,
   });
 
   List<Outbound> get outbounds => _outbounds;
@@ -22,8 +25,18 @@ class OutboundController extends ChangeNotifier {
   String? get error => _error;
   DateTime get selectedDate => _selectedDate;
 
+  int get totalOrders => _totalOrders;
+  double get dailyRevenue => _dailyRevenue;
+
+  void registerOrder(double value) {
+    _totalOrders++;
+    _dailyRevenue += value;
+    notifyListeners();
+  }
+
   Future<void> loadOutbounds() async {
     final userId = salePointController.currentUser?.id;
+
     if (userId == null) {
       _error = 'Usuário não identificado';
       notifyListeners();
@@ -33,10 +46,11 @@ class OutboundController extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    
+
     try {
-      _outbounds = await outboundService.getOutbounds(userId, date: _selectedDate);
-    } catch(e) {
+      _outbounds =
+          await outboundService.getOutbounds(userId, date: _selectedDate);
+    } catch (e) {
       _error = e.toString();
       _outbounds = [];
     } finally {
@@ -48,14 +62,6 @@ class OutboundController extends ChangeNotifier {
   Future<void> changeDate(DateTime newDate) async {
     _selectedDate = newDate;
     await loadOutbounds();
-  }
-
-  double get totalValue {
-    return _outbounds.fold(0, (sum, item) => sum + (item.total_value_item ?? 0));
-  }
-
-  int get totalOutbounds {
-    return _outbounds.length;
   }
 
   void clearError() {

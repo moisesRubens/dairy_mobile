@@ -9,7 +9,7 @@ class OutboundService {
   Future<List<Outbound>> getOutbounds(int id, {DateTime? date}) async {
     String endpoint = 'auth/$id/outbounds';
     
-    // Se tiver data, adiciona como query parameter
+    
     if (date != null) {
       final formattedDate = date.toIso8601String().split('T').first;
       endpoint = 'auth/$id/outbounds?date=$formattedDate';

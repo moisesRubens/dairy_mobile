@@ -211,25 +211,29 @@ class DairyStatus extends StatefulWidget {
 class _StateDairyStatus extends State<DairyStatus> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Faturamento do dia"),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text("Soma: "),
-                Text("Total de Pedidos: ")
+    return Consumer<OutboundController>(
+      builder: (context, controller, _) {
+        return Card(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Faturamento do dia"),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Soma: R\$ ${controller.dailyRevenue.toStringAsFixed(2)}"),
+                    Text("Total de Pedidos: ${controller.totalOrders}")
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
